@@ -8,6 +8,7 @@ import { useGoogleCalendar } from './hooks/useGoogleCalendar'
 import { useClock } from './hooks/useClock'
 import { autoArrange } from './utils/autoArrange'
 import { toDateString, addMinutes } from './utils/timeUtils'
+import { updateFavicon } from './utils/favicon'
 import { Task, CompletedTask, StoredState } from './types'
 import { GOOGLE_CLIENT_ID } from './config'
 
@@ -56,6 +57,12 @@ export default function App() {
   const [clientIdInput, setClientIdInput] = useState(clientId)
 
   const { fetchTodayEvents, isLoading, error: calError } = useGoogleCalendar(clientId)
+
+  // Update favicon whenever the date changes (runs on mount and at midnight)
+  useEffect(() => {
+    updateFavicon(now)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [today])
 
   // Load from localStorage once on mount
   useEffect(() => {
